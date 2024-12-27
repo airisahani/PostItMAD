@@ -2,7 +2,6 @@ package com.example.artownmad.Activities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,9 +9,6 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.artownmad.AccountFragment;
-import com.example.artownmad.HistoryFragment;
 import com.example.artownmad.HomeFragment;
 import com.example.artownmad.MapFragment;
 import com.example.artownmad.R;
@@ -65,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.home) {
                 replaceFragment(new HomeFragment());
             } else if (id == R.id.history) {
-                replaceFragment(new HistoryFragment());
+                Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(intent);
             } else if (id == R.id.account) {
                 replaceFragment(new AccountFragment());
             } else if (id == R.id.map){
@@ -112,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 //        private void showNotification (String current){
 //            Intent intent = new Intent(this, StatusUpdateActivity.class);
