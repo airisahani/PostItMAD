@@ -31,6 +31,26 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/BtnEmergencyNoti"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="167dp"
+            android:text="Alert"
+            android:textSize="12sp"
+            android:background="@drawable/notibutton"
+            tools:layout_editor_absoluteX="240dp"
+            tools:layout_editor_absoluteY="6dp" />
+
+        <ImageButton
+            android:id="@+id/CallButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_menu_call"
+            android:layout_marginLeft="10dp"
+            tools:layout_editor_absoluteX="340dp"
+            tools:layout_editor_absoluteY="4dp" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
@@ -66,6 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:maxImageSize="40dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
