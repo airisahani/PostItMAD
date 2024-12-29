@@ -2,6 +2,4 @@
     <string name="app_name">ArTownMAD</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="my_map_api_key">AIzaSyDSj_Q4kMPbOdgwIVTS_uUblPvsy8G_w00</string>
 </resources>
