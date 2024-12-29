@@ -1,5 +1,7 @@
 package com.example.artownmad.Activities;
 
+import static androidx.core.app.ActivityCompat.requestPermissions;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,11 +22,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.artownmad.AccountFragment;
-import com.example.artownmad.HistoryFragment;
 import com.example.artownmad.HomeFragment;
 import com.example.artownmad.MapFragment;
 import com.example.artownmad.R;
+import com.example.artownmad.UserProfile;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -65,9 +66,10 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.home) {
                 replaceFragment(new HomeFragment());
             } else if (id == R.id.history) {
-                replaceFragment(new HistoryFragment());
+                Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(intent);
             } else if (id == R.id.account) {
-                replaceFragment(new AccountFragment());
+                replaceFragment(new UserProfile());
             } else if (id == R.id.map){
                 replaceFragment(new MapFragment());
                 //Intent intent = new Intent(getApplicationContext(), MapFragment.class);

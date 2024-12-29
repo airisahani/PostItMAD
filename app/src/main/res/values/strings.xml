@@ -2,6 +2,8 @@
     <string name="app_name">ArTownMAD</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="api_key">5f4cb625ac584637b1cbcc592dbd2265</string>
+    <string name="my_map_api_key">AIzaSyDSj_Q4kMPbOdgwIVTS_uUblPvsy8G_w00</string>
 
     <string-array name="categories">
         <item>Select a category</item>
@@ -11,4 +13,7 @@
         <item>Social Issues</item>
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+
 </resources>
+
+
