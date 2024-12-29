@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "134473913342",
+    "project_id": "artownmad",
+    "storage_bucket": "artownmad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134473913342:android:24fd1e3367663dbd3f26af",
+        "android_client_info": {
+          "package_name": "com.example.artownmad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtzzUmg8VONrnNp521iBR-fBI25--gKzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

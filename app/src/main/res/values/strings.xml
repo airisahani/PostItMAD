@@ -2,4 +2,13 @@
     <string name="app_name">ArTownMAD</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="categories">
+        <item>Select a category</item>
+        <item>Emergency</item>
+        <item>Crime</item>
+        <item>Public Service</item>
+        <item>Social Issues</item>
+    </string-array>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

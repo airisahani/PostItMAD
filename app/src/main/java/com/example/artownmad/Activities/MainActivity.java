@@ -71,13 +71,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddReportActivity.class); // Create an Intent for the ReportActivity
-                startActivity(intent); // Start the ReportActivity
-            }
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(view -> {
+            // Navigate to the Add Report page
+            startActivity(new Intent(MainActivity.this, AddReportActivity.class));
         });
 
         bottomNavigationView.setVisibility(View.VISIBLE);
