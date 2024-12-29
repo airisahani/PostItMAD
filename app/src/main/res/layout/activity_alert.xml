@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/redgradient"
+    tools:context=".Activities.AlertActivity">
+
+    <TextView
+        android:id="@+id/TVAlertData2"
+        android:layout_width="357dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="44dp"
+        android:text="Remember to ALWAYS bring umbrella with you!"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVannouncement" />
+
+    <TextView
+        android:id="@+id/TVCaution"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:text="Caution"
+        android:paddingLeft="20dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/TVAlertData"
+        android:layout_width="357dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="40dp"
+        android:text="Always lock your door after leaving home!"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVAlertData2" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/BtnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:srcCompat="@drawable/ic_arrow_back_ios_24"
+            tools:layout_editor_absoluteY="3dp" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginLeft="23dp"
+            android:text="Post.it"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/AlerttextTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="  Alert Feed"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/TVannouncement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="296dp"
+        android:paddingLeft="20dp"
+        android:text="Today's Public Safety Announcement"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

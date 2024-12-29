@@ -37,7 +37,13 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation (libs.news.api.java)
+    implementation ("com.github.KwabenBerko:News-API-Java:1.0.0")
+    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }

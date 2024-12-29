@@ -3,8 +3,10 @@ package com.example.artownmad.Activities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,32 +15,49 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.artownmad.AccountFragment;
+import com.example.artownmad.CallFragment;
+import com.example.artownmad.CustomAdapter;
 import com.example.artownmad.HistoryFragment;
 import com.example.artownmad.HomeFragment;
 import com.example.artownmad.MapFragment;
+import com.example.artownmad.Models.NewsApiResponse;
+import com.example.artownmad.Models.NewsHeadlines;
+import com.example.artownmad.OnFetchDataListener;
 import com.example.artownmad.R;
+import com.example.artownmad.RequestManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.Manifest;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    CustomAdapter adapter;
     private static final String CHANNEL_ID = "Post.It";
     private static final int RC_NOTIFICATION = 99;
     private static final String PREF_NAME = "ReportStatusPrefs";
     FloatingActionButton fab;
     public BottomNavigationView bottomNavigationView;
+    Button button;
+    ImageButton buttoncall;
 
 
     @Override
@@ -46,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        RequestManager manager = new RequestManager(this);
+        manager.getNewsHeadlines(listener, "general", null);
 
         // Request permission to allow notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -87,12 +109,95 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
 
+        button = findViewById(R.id.BtnEmergencyNoti);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            if (ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},101);
+            }
+        }
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeNotification();
+
+            }
+        });
+
+        buttoncall = findViewById(R.id.CallButton);
+        buttoncall.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                CallFragment fragmentcall = new CallFragment();
+                transaction.replace(R.id.fragment_layout, fragmentcall);
+                transaction.commit();
+
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    public void makeNotification(){
+        String chanelID = "CHANNEL_ID_NOTIFICATION";
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext(), chanelID);
+        builder.setSmallIcon(R.drawable.ic_notifications_active_24)
+                .setContentTitle("Notification Title")
+                .setContentText("Some text for notification here")
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        Intent intent = new Intent(getApplicationContext(), AlertActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("data", "Some value to be passed here");
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                0, intent, PendingIntent.FLAG_MUTABLE);
+        builder.setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel = notificationManager.getNotificationChannel(chanelID);
+            if (notificationChannel == null){
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                notificationChannel = new NotificationChannel(chanelID, "Some description", importance);
+                notificationChannel.setLightColor(Color.GREEN);
+                notificationChannel.enableVibration(true);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+        }
+        notificationManager.notify(0, builder.build());
+
+    }
+
+    private final OnFetchDataListener<NewsApiResponse> listener = new OnFetchDataListener<NewsApiResponse>() {
+        @Override
+        public void onFetchData(List<NewsHeadlines> list, String message) {
+            showNews(list);
+
+        }
+
+        @Override
+        public void onError(String message) {
+
+        }
+    };
+
+    private void showNews(List<NewsHeadlines> list) {
+        recyclerView = findViewById(R.id.recycler_main);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        adapter = new CustomAdapter(this, list, null);
+        recyclerView.setAdapter(adapter);
     }
 
     private void createNotificationChannel() {

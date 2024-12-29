@@ -1,19 +1,36 @@
 package com.example.artownmad;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.artownmad.Models.NewsApiResponse;
+import com.example.artownmad.Models.NewsHeadlines;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.kwabenaberko.newsapilib.NewsApiClient;
+import com.kwabenaberko.newsapilib.models.Article;
+import com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest;
+import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SelectListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,19 +63,70 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+    RecyclerView recyclerView;
+    CustomAdapter adapter;
+    ProgressDialog dialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getContext();
+
+//        RequestManager manager = new RequestManager(requireContext());
+//        manager.getNewsHeadlines(listener, "general", null);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+//    private final OnFetchDataListener<NewsApiResponse> listener = new OnFetchDataListener<NewsApiResponse>(){
+//
+//        @Override
+//        public void onFetchData(List<NewsHeadlines> list, String message) {
+//            showNews(list);
+//            dialog.dismiss();
+//
+//        }
+//
+//        @Override
+//        public void onError(String message) {
+//
+//        }
+//    };
+
+//    private void showNews(List<NewsHeadlines> list) {
+////        recyclerView = view.findViewById(R.id.recycler_main);
+////        recyclerView.setHasFixedSize(true);
+////        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
+//        adapter = new CustomAdapter(getContext(), list, this);
+//        recyclerView.setAdapter(adapter);
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+//        recyclerView = view.findViewById(R.id.recycler_main);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
+
+        dialog = new ProgressDialog(getContext());
+        dialog.setTitle("Fetching news articles...");
+        dialog.show();
+
+        //RequestManager manager = new RequestManager(requireContext());
+        //manager.getNewsHeadlines(listener, "general", null);
+        return view;
+    }
+
+
+    @Override
+    public void OnNewsClicked(NewsHeadlines headlines) {
+        startActivity(new Intent(requireContext(), DetailsActivity.class)
+                .putExtra("data", headlines));
+
     }
 }
