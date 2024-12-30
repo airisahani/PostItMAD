@@ -79,6 +79,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="Reports"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/white"
         android:src="@drawable/add_icon"

@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.ActivityCompat;
 
-public class AddReportActivity extends AppCompatActivity {
+public class AddReportActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int IMAGE_PICK_CODE = 1000;
     private Uri selectedImageUri;
     private EditText Title_et, et_description, name2;
@@ -57,7 +59,7 @@ public class AddReportActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private TextView tvSelectedLocation;
 
-    private FirebaseFirestore db;
+    FirebaseFirestore db;
     private StorageReference storageRef;
 
     @SuppressLint("MissingInflatedId")
@@ -231,4 +233,8 @@ public class AddReportActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
+    }
 }
