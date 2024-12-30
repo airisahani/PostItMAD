@@ -196,7 +196,8 @@
         android:id="@+id/btn_post_report"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/BlackButtonStyle"
+
+        android:backgroundTint="#141414"
         android:text="Post Your Report"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"

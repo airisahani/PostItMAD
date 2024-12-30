@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -33,49 +34,41 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.ActivityCompat;
 
 public class AddReportActivity extends AppCompatActivity {
-    private static final int IMAGE_PICK_CODE = 1000;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
     private Uri selectedImageUri;
     private EditText Title_et, et_description, name2;
     private Spinner spinner_category;
     private Switch switch_anonymity;
-    private Button btn_post_report;
+    private Button btn_post_report, btn_add_location, btn_add_current_location;
     private ImageButton imageButton;
-    private Button btn_add_location;
-
-    private Button btn_add_current_location;
-    private String locationString = "No location selected";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
-    private LocationManager locationManager;
-
-    private static final int MAP_REQUEST_CODE = 2000;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private TextView tvSelectedLocation;
 
+    private String locationString = "No location selected";
     private FirebaseFirestore db;
     private StorageReference storageRef;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private ActivityResultLauncher<Intent> mapLauncher;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        db = FirebaseFirestore.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference();
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_report);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.Title2), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+        // Initialize Firebase Firestore and Storage
+        db = FirebaseFirestore.getInstance();
+        storageRef = FirebaseStorage.getInstance().getReference();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize views
         Title_et = findViewById(R.id.Title_et);
@@ -85,24 +78,70 @@ public class AddReportActivity extends AppCompatActivity {
         switch_anonymity = findViewById(R.id.switch_anonymity);
         btn_post_report = findViewById(R.id.btn_post_report);
         imageButton = findViewById(R.id.imageButton);
-        btn_add_current_location= findViewById(R.id.btn_add_current_location);
         btn_add_location = findViewById(R.id.btn_add_location);
+        btn_add_current_location = findViewById(R.id.btn_add_current_location);
+        tvSelectedLocation = findViewById(R.id.tv_location);
 
-        // spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+        // Spinner setup
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_category.setAdapter(adapter);
-        spinner_category.setSelection(0); // Set default selection
 
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, IMAGE_PICK_CODE);
-            }
+        // Initialize ActivityResultLaunchers
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                    }
+                }
+        );
+
+        mapLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        locationString = result.getData().getStringExtra("selected_location");
+                        tvSelectedLocation.setText(locationString);
+                    }
+                }
+        );
+
+        // Image picker
+        imageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
         });
 
-//anonymity switch
+        // Open map for location selection
+        btn_add_location.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapsActivity.class);
+            mapLauncher.launch(intent);
+        });
+
+        // Add current location
+        btn_add_current_location.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST_CODE);
+                return;
+            }
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(location -> {
+                        if (location != null) {
+                            locationString = "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude();
+                            tvSelectedLocation.setText(locationString);
+                        } else {
+                            Toast.makeText(this, "Unable to fetch current location", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        });
+
+        // Post report
         btn_post_report.setOnClickListener(v -> {
             String title = Title_et.getText().toString().trim();
             String description = et_description.getText().toString().trim();
@@ -143,79 +182,6 @@ public class AddReportActivity extends AppCompatActivity {
                 saveReportToFirestore(reportData);
             }
         });
-        // location components
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        btn_add_location.setOnClickListener(v -> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-                return;
-            }
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            locationString = "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude();
-                            Toast.makeText(this, "Location added: " + locationString, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Unable to fetch current location", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        });
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        tvSelectedLocation = findViewById(R.id.tv_location);
-        Button btnSelectLocation = findViewById(R.id.btn_add_location);
-        Button btnAddCurrentLocation = findViewById(R.id.btn_add_current_location);
-
-        // Open map to select location
-        btnSelectLocation.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivityForResult(intent, MAP_REQUEST_CODE);
-        });
-        // Add current location
-        btnAddCurrentLocation.setOnClickListener(v -> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-                return;
-            }
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            locationString = "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude();
-                            tvSelectedLocation.setText(locationString);
-                        } else {
-                            Toast.makeText(this, "Unable to fetch current location", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == IMAGE_PICK_CODE) {
-                selectedImageUri = data.getData();
-                // Optionally, display the image in an ImageView or store it
-            } else if (requestCode == MAP_REQUEST_CODE && data != null) {
-                locationString = data.getStringExtra("selected_location");
-                tvSelectedLocation.setText(locationString);
-            }
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Location permission granted. Please click 'Add Location' again.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void saveReportToFirestore(Map<String, Object> reportData) {
@@ -230,5 +196,18 @@ public class AddReportActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to post report: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Location permission granted. Please click 'Add Location' again.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }
