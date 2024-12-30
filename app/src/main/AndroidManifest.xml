@@ -17,6 +17,12 @@
         android:theme="@style/Theme.ArTownMAD"
         tools:targetApi="31">
 
+<!--        <activity-->
+<!--            android:name=".Activities.LogIn"-->
+<!--            android:exported="false" />-->
+        <activity
+            android:name=".Activities.AlertActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="false"/>

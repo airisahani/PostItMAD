@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.example.artownmad.R;
 import android.Manifest;
@@ -208,6 +210,7 @@ public class AddReportActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
 }

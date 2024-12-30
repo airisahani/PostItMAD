@@ -26,18 +26,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:text="        Post.it"
+            android:text="      Post.it"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="30sp"
+            android:fontFamily="@font/lato_black"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/BtnEmergencyNoti"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginLeft="167dp"
+            android:layout_marginLeft="120dp"
             android:text="Alert"
-            android:textSize="12sp"
+            android:textSize="18sp"
+            android:fontFamily="@font/lato_black"
             android:background="@drawable/notibutton"
             tools:layout_editor_absoluteX="240dp"
             tools:layout_editor_absoluteY="6dp" />
@@ -82,6 +84,7 @@
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/white"
         android:src="@drawable/add_icon"
+        android:contentDescription="Reports"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
