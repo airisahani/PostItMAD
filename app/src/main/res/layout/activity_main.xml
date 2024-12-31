@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:text="      Post.it"
+            android:text="          Post.it"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:fontFamily="@font/lato_black"
@@ -36,7 +36,7 @@
             android:id="@+id/BtnEmergencyNoti"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginLeft="120dp"
+            android:layout_marginLeft="90dp"
             android:text="Alert"
             android:textSize="18sp"
             android:fontFamily="@font/lato_black"
@@ -48,12 +48,25 @@
             android:id="@+id/CallButton"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            app:srcCompat="@android:drawable/ic_menu_call"
+            app:srcCompat="@drawable/baseline_call_24"
             android:layout_marginLeft="10dp"
             tools:layout_editor_absoluteX="340dp"
-            tools:layout_editor_absoluteY="4dp" />
+            tools:layout_editor_absoluteY="4dp"
+            android:background="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/BtnStatusUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/baseline_hourglass_top_24"
+            android:layout_marginLeft="2dp"
+            tools:layout_editor_absoluteX="340dp"
+            tools:layout_editor_absoluteY="4dp"
+            android:background="@color/white"/>
 
     </androidx.appcompat.widget.Toolbar>
+
+
 
     <FrameLayout
         android:id="@+id/fragment_layout"

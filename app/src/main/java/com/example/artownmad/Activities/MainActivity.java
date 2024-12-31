@@ -1,5 +1,7 @@
 package com.example.artownmad.Activities;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     public BottomNavigationView bottomNavigationView;
     Button button;
-    ImageButton buttoncall;
+    ImageButton buttoncall, btnStatusUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnStatusUpdate = findViewById(R.id.BtnStatusUpdate);
+        btnStatusUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), StatusUpdate.class);
+                //Intent intent = new Intent(getActivity().getApplicationContext(), StatusUpdate.class);
+                startActivity(intent);
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -100,15 +112,15 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-//        if (currentUser == null) {
-//            Log.e("MainActivity", "User not logged in");
-//            Intent intent = new Intent(this, LogIn.class);
-//            startActivity(intent);
-//            finish();
-//            return; // Prevent further execution if user is not logged in
-//        }
+        if (currentUser == null) {
+            Log.e("MainActivity", "User not logged in");
+            Intent intent = new Intent(this, LogInActivity.class);
+            startActivity(intent);
+            finish();
+            return; // Prevent further execution if user is not logged in
+        }
 
-        //String currentUserId = currentUser.getUid();
+        String currentUserId = currentUser.getUid();
 
         // Request permission to allow notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -118,28 +130,28 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         // Fetch updated status data from Firebase Firestore
-//        CollectionReference reportRef = db.collection("report");
-//        reportRef.whereEqualTo("user", currentUserId).addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                if (error != null){
-//                    return;
-//                }
-//                if (value != null && !value.isEmpty()){
-//                    for(QueryDocumentSnapshot document : value){
-//                        // Check if the "status" field has changed
-//                        String currentStatus = document.getString("status");
-//                        String previousStatus = getPreviousStatus(getApplicationContext(),document.getId());
-//                        if (previousStatus == null || !previousStatus.equals(currentStatus)){
-//                            // Status has changed, show notification
-//                            showNotification(currentStatus);
-//                            // Update the previous status
-//                            setPreviousStatus(getApplicationContext(), document.getId(), currentStatus);
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        CollectionReference reportRef = db.collection("reports");
+        reportRef.whereEqualTo("user", currentUserId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null){
+                    return;
+                }
+                if (value != null && !value.isEmpty()){
+                    for(QueryDocumentSnapshot document : value){
+                        // Check if the "status" field has changed
+                        String currentStatus = document.getString("status");
+                        String previousStatus = getPreviousStatus(getApplicationContext(),document.getId());
+                        if (previousStatus == null || !previousStatus.equals(currentStatus)){
+                            // Status has changed, show notification
+                            showNotification(currentStatus);
+                            // Update the previous status
+                            setPreviousStatus(getApplicationContext(), document.getId(), currentStatus);
+                        }
+                    }
+                }
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         fab = findViewById(R.id.fab);
@@ -191,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), AlertActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("data", "Some value to be passed here");
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+        PendingIntent pendingIntent = getActivity(getApplicationContext(),
                 0, intent, PendingIntent.FLAG_MUTABLE);
         builder.setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -243,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         private void showNotification (String current){
             Intent intent = new Intent(this, HistoryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.logo)

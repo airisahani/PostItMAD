@@ -50,4 +50,8 @@ public class Reports {
     private String desc;
     private String userId;
     private String status;
+    private String category;
+    private String name;
+    private String description;
+    private String title;
 }

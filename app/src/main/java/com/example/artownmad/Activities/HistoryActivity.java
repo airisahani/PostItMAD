@@ -83,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             Log.d("TAG", "user is logged in");
-            CollectionReference reportsRef = fStore.collection("report");
+            CollectionReference reportsRef = fStore.collection("reports");
             Query query = reportsRef;
 
             query.get()
@@ -97,7 +97,7 @@ public class HistoryActivity extends AppCompatActivity {
                                 // Check if the report is within 10 km from the device's location
                                 if (isWithinDistance(report)) {
                                     reports.add(report);
-                                    Log.d("TAG", "eeeeeeeeeeeeee");
+                                    Log.d("TAG", "yeeeeeeees");
                                 }
                                 else{
                                     Log.d("TAG", "noooooo");

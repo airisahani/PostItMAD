@@ -17,6 +17,8 @@
         android:theme="@style/Theme.ArTownMAD"
         tools:targetApi="31">
 
+        <activity android:name=".Activities.StatusUpdate"
+            android:exported="false" />
         <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:exported="false" />
