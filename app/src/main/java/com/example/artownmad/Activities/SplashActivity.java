@@ -26,23 +26,24 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.Splash), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // Initialize buttons and set click listeners
         Button BtnLogIn = findViewById(R.id.BtnLogin);
-        BtnLogIn.setOnClickListener(v -> {
-            // Navigate to the login fragment
-            Navigation.findNavController(this, R.id.nav).navigate(R.id.LogInLayout);
+        BtnLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SplashActivity.this, LogInActivity.class);
+                startActivity(intent);
+            }
         });
 
         Button BtnSignUp = findViewById(R.id.BtnRegister);
-        BtnSignUp.setOnClickListener(v -> {
-            // Navigate to the signup fragment
-            Navigation.findNavController(this, R.id.nav).navigate(R.id.SignUpLayout);
+        BtnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SplashActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
         });
 
     }
