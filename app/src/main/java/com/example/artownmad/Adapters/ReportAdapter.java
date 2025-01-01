@@ -37,7 +37,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reports report = reports.get(position);
         TextView emoji2 = holder.emoji;
-        String status = report.getStatus();
+        String status = report.getStatus() != null ? report.getStatus() : "Unknown Status";
         if(status.equalsIgnoreCase("resolved")){
             emoji2.setText("✅");
         }
@@ -46,63 +46,66 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder
         }
         TextView status2 = holder.status;
         status2.setText(report.getStatus());
-        TextView descTextView = holder.descTextView;
-        descTextView.setText(report.getDesc());
+        TextView titleTextView = holder.titleTextView;
+        titleTextView.setText(report.getTitle());
+        TextView descriptionTextView = holder.descriptionTextView;
+        descriptionTextView.setText(report.getDescription());
+
         // Format and display location
-        TextView locationTextView = holder.locationTextView;
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault()); // Use device's locale
-            List<Address> addresses = geocoder.getFromLocation(report.getLocation().getLatitude(), report.getLocation().getLongitude(), 1);
-            if (addresses.size() > 0) {
-                Address address = addresses.get(0);
-                String locationName = "";
-                if (address.getThoroughfare() != null) {
-                    locationName += address.getThoroughfare() + ", ";
-                }
-                if (address.getSubLocality() != null) {
-                    locationName += address.getSubLocality() + ", ";
-                }
-                String state = address.getAdminArea();
-                String country = address.getCountryName();
-                if (state != null) {
-                    locationName += state + ", ";
-                }
-                if (country != null) {
-                    locationName += country;
-                }
-                locationName = locationName.trim(); // Remove trailing comma
-                locationTextView.setText(locationName);
-            } else {
-                Log.d("ReportAdapter", "Geocoder returned no addresses"); // Log for debugging
-                locationTextView.setText("Unknown Location");
-            }
-        } catch (IOException e) {
-            Log.e("ReportAdapter", "Error retrieving location: " + e.getMessage()); // Log for debugging
-            locationTextView.setText("Error retrieving location");
-        }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(context, MapFragment.class); // Assuming your map activity is named MapActivity
-                intent.putExtra("latitude", report.getLocation().getLatitude());
-                intent.putExtra("longitude", report.getLocation().getLongitude());
-                context.startActivity(intent);
-            }
-        });
+
+//        try {
+//            Geocoder geocoder = new Geocoder(context, Locale.getDefault()); // Use device's locale
+//            List<Address> addresses = geocoder.getFromLocation(report.getLocation().getLatitude(), report.getLocation().getLongitude(), 1);
+//            if (addresses.size() > 0) {
+//                Address address = addresses.get(0);
+//                String locationName = "";
+//                if (address.getThoroughfare() != null) {
+//                    locationName += address.getThoroughfare() + ", ";
+//                }
+//                if (address.getSubLocality() != null) {
+//                    locationName += address.getSubLocality() + ", ";
+//                }
+//                String state = address.getAdminArea();
+//                String country = address.getCountryName();
+//                if (state != null) {
+//                    locationName += state + ", ";
+//                }
+//                if (country != null) {
+//                    locationName += country;
+//                }
+//                locationName = locationName.trim(); // Remove trailing comma
+//                locationTextView.setText(locationName);
+//            } else {
+//                Log.d("ReportAdapter", "Geocoder returned no addresses"); // Log for debugging
+//                locationTextView.setText("Unknown Location");
+//            }
+//        } catch (IOException e) {
+//            Log.e("ReportAdapter", "Error retrieving location: " + e.getMessage()); // Log for debugging
+//            locationTextView.setText("Error retrieving location");
+//        }
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent intent = new Intent(context, MapFragment.class); // Assuming your map activity is named MapActivity
+//                intent.putExtra("latitude", report.getLocation().getLatitude());
+//                intent.putExtra("longitude", report.getLocation().getLongitude());
+//                context.startActivity(intent);
+//            }
+//        });
     }
     @Override
     public int getItemCount() {
         return reports.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView locationTextView, descTextView, userIdTextView, emoji, status;
+        TextView descriptionTextView, titleTextView, emoji, status;
         public ViewHolder(View itemView) {
             super(itemView);
-            locationTextView = itemView.findViewById(R.id.TVReportLocation);
-            descTextView = itemView.findViewById(R.id.TVReportTitle);
-            emoji = itemView.findViewById(R.id.textView7);
-            status = itemView.findViewById(R.id.textView6);
+            descriptionTextView = itemView.findViewById(R.id.TVReportDescription);
+            titleTextView = itemView.findViewById(R.id.TVReportTitle);
+            emoji = itemView.findViewById(R.id.TVReportEmoji);
+            status = itemView.findViewById(R.id.TVReportStatus);
         }
     }
 }

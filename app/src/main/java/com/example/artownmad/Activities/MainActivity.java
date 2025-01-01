@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), StatusUpdate.class);
-                //Intent intent = new Intent(getActivity().getApplicationContext(), StatusUpdate.class);
                 startActivity(intent);
             }
         });

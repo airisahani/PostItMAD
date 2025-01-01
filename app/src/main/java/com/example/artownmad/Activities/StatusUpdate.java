@@ -59,7 +59,7 @@ public class StatusUpdate extends AppCompatActivity {
 
         if (currentUser != null) {
             String uid = currentUser.getUid();
-            CollectionReference reportsRef = fStore.collection("report");
+            CollectionReference reportsRef = fStore.collection("reports");
             Query query = reportsRef.whereEqualTo("user", uid);
 
             query.get()
