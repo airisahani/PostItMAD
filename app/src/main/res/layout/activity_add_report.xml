@@ -10,20 +10,6 @@
 
 
     <TextView
-        android:id="@+id/Addimg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add image"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.002"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.696" />
-
-    <TextView
         android:id="@+id/Desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -177,26 +163,11 @@
         app:layout_constraintTop_toBottomOf="@+id/Title_et"
         app:layout_constraintVertical_bias="0.306" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="83dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="124dp"
-        android:contentDescription="Add image here"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Addimg"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/add_icon" />
 
     <Button
         android:id="@+id/btn_post_report"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         android:backgroundTint="#141414"
         android:text="Post Your Report"
         android:textColor="@android:color/white"
@@ -205,43 +176,49 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.901" />
 
     <TextView
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="92dp"
         android:text="Location"
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btn_post_report"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.008"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
-        app:layout_constraintVertical_bias="0.1" />
 
+        />
 
     <Button
         android:id="@+id/btn_add_current_location"
         android:layout_width="200dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="160dp"
         android:text="Add current"
-        app:layout_constraintBottom_toTopOf="@+id/btn_post_report"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+
+        app:layout_constraintTop_toBottomOf="@+id/tv_location"
         app:layout_constraintVertical_bias="0.586" />
 
     <Button
         android:id="@+id/btn_add_location"
         android:layout_width="200dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="160dp"
         android:text="Select Location"
-        app:layout_constraintBottom_toTopOf="@+id/btn_post_report"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.966"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+
+        app:layout_constraintTop_toBottomOf="@+id/tv_location"
         app:layout_constraintVertical_bias="0.586" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
