@@ -1,5 +1,7 @@
 package com.example.artownmad.Activities;
 
+import static java.lang.System.currentTimeMillis;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +34,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,6 +44,7 @@ import com.google.firebase.storage.StorageReference;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.ActivityCompat;
@@ -150,6 +156,7 @@ public class AddReportActivity extends AppCompatActivity {
             String name = name2.getText().toString().trim();
             String category = spinner_category.getSelectedItem().toString();
             boolean isAnonymous = switch_anonymity.isChecked();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
             if (title.isEmpty() || description.isEmpty()) {
                 Toast.makeText(this, "Title and description are required", Toast.LENGTH_SHORT).show();
@@ -157,15 +164,17 @@ public class AddReportActivity extends AppCompatActivity {
             }
 
             Map<String, Object> reportData = new HashMap<>();
+            reportData.put("user", currentUser.getUid());
             reportData.put("title", title);
             reportData.put("description", description);
             reportData.put("name", isAnonymous ? "Anonymous" : name);
             reportData.put("category", category);
             reportData.put("location", locationString);
-            reportData.put("timestamp", System.currentTimeMillis());
+            reportData.put("timestamp",currentTimeMillis());
+            reportData.put("status", "Pending");
 
             if (selectedImageUri != null) {
-                StorageReference imageRef = storageRef.child("reports/" + System.currentTimeMillis() + ".jpg");
+                StorageReference imageRef = storageRef.child("reports/" + currentTimeMillis() + ".jpg");
                 imageRef.putFile(selectedImageUri)
                         .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
@@ -210,7 +219,6 @@ public class AddReportActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 }
+
+

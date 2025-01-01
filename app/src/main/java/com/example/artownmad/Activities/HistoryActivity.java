@@ -72,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Fetch reports
-        getDeviceLocation();
+        //getDeviceLocation();
         fetchReports();
     }
 
@@ -85,6 +85,7 @@ public class HistoryActivity extends AppCompatActivity {
             Log.d("TAG", "user is logged in");
             CollectionReference reportsRef = fStore.collection("reports");
             Query query = reportsRef;
+           // Query query = reportsRef.whereEqualTo("userId", currentUser.getUid());
 
             query.get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -93,15 +94,16 @@ public class HistoryActivity extends AppCompatActivity {
                             Log.d("TAG", "success");
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 Reports report = document.toObject(Reports.class);
+                                reports.add(report);
 
-                                // Check if the report is within 10 km from the device's location
-                                if (isWithinDistance(report)) {
-                                    reports.add(report);
-                                    Log.d("TAG", "yeeeeeeees");
-                                }
-                                else{
-                                    Log.d("TAG", "noooooo");
-                                }
+//                                // Check if the report is within 10 km from the device's location
+//                                if (isWithinDistance(report)) {
+//                                    reports.add(report);
+//                                    Log.d("TAG", "yeeeeeeees");
+//                                }
+//                                else{
+//                                    Log.d("TAG", "noooooo");
+//                                }
                             }
 
                             // Set adapter for RecyclerView
@@ -123,63 +125,63 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     // Helper method to check if a report is within the specified distance
-    private boolean isWithinDistance(Reports report) {
-        // Replace these values with the actual latitude and longitude of the device
-        double deviceLatitude = this.deviceLatitude; // Use the values from getDeviceLocation
-        double deviceLongitude = this.deviceLongitude;
-
-        GeoPoint reportLocation = report.getLocation();
-
-        // Ensure the report has a valid GeoPoint
-        if (reportLocation != null) {
-            double reportLatitude = reportLocation.getLatitude();
-            double reportLongitude = reportLocation.getLongitude();
-
-            // Haversine formula to calculate distance
-            double lat1 = Math.toRadians(deviceLatitude);
-            double lon1 = Math.toRadians(deviceLongitude);
-            double lat2 = Math.toRadians(reportLatitude);
-            double lon2 = Math.toRadians(reportLongitude);
-
-            double dlon = lon2 - lon1;
-            double dlat = lat2 - lat1;
-
-            double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
-            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            double distance = 6371 * c; // Radius of the Earth in kilometers
-
-            return distance <= 10;
-        }
-
-        // If the report does not have a valid GeoPoint, consider it outside the distance
-        return false;
-    }
-
-    private void getDeviceLocation(){
-        Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
-        try {
-            // Check for location permission
-            if (ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // Request last known location
-                Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
-                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                if (lastLocation != null) {
-                    deviceLatitude = lastLocation.getLatitude();
-                    deviceLongitude = lastLocation.getLongitude();
-                    Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
-                } else {
-                    // Handle the case where last known location is not available
-                    Log.w("TAG", "Last known location not available");
-                    // Consider providing a fallback mechanism here
-                }
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            Log.d("TAG", "Last known location not available");
-        }
-    }
+//    private boolean isWithinDistance(Reports report) {
+//        // Replace these values with the actual latitude and longitude of the device
+//        double deviceLatitude = this.deviceLatitude; // Use the values from getDeviceLocation
+//        double deviceLongitude = this.deviceLongitude;
+//
+//        GeoPoint reportLocation = report.getLocation();
+//
+//        // Ensure the report has a valid GeoPoint
+//        if (reportLocation != null) {
+//            double reportLatitude = reportLocation.getLatitude();
+//            double reportLongitude = reportLocation.getLongitude();
+//
+//            // Haversine formula to calculate distance
+//            double lat1 = Math.toRadians(deviceLatitude);
+//            double lon1 = Math.toRadians(deviceLongitude);
+//            double lat2 = Math.toRadians(reportLatitude);
+//            double lon2 = Math.toRadians(reportLongitude);
+//
+//            double dlon = lon2 - lon1;
+//            double dlat = lat2 - lat1;
+//
+//            double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+//            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//
+//            double distance = 6371 * c; // Radius of the Earth in kilometers
+//
+//            return distance <= 10;
+//        }
+//
+//        // If the report does not have a valid GeoPoint, consider it outside the distance
+//        return false;
+//    }
+//
+//    private void getDeviceLocation(){
+//        Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
+//        try {
+//            // Check for location permission
+//            if (ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                // Request last known location
+//                Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
+//                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//                if (lastLocation != null) {
+//                    deviceLatitude = lastLocation.getLatitude();
+//                    deviceLongitude = lastLocation.getLongitude();
+//                    Log.d("TAG", "Device Location: Lat=" + deviceLatitude + ", Lng=" + deviceLongitude);
+//                } else {
+//                    // Handle the case where last known location is not available
+//                    Log.w("TAG", "Last known location not available");
+//                    // Consider providing a fallback mechanism here
+//                }
+//            }
+//        } catch (SecurityException e) {
+//            e.printStackTrace();
+//            Log.d("TAG", "Last known location not available");
+//        }
+//    }
 
 }
 
