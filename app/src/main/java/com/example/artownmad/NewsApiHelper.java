@@ -1,8 +1,11 @@
 package com.example.artownmad;
+
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +17,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 import javax.net.ssl.HttpsURLConnection;
+
 public class NewsApiHelper {
+
     private static final String API_URL = "https://newsdata.io/api/1/news?apikey=pub_630578e073e04012d95ba83420cb21c2fd78d&q=selangor";
+    //private static final String API_URL2 = "https://newsdata.io/api/1/latest?apikey=pub_630578e073e04012d95ba83420cb21c2fd78d=selangor";
+
     public List<NewsItem> fetchData() {
         Executor executor = Executors.newSingleThreadExecutor();
+
         CompletableFuture<List<NewsItem>> future = CompletableFuture.supplyAsync(() -> {
             try {
                 String jsonResult = downloadUrl(API_URL);
@@ -29,6 +38,7 @@ public class NewsApiHelper {
                 throw new RuntimeException(e);
             }
         }, executor);
+
         // Wait for the CompletableFuture to complete and get the result
         try {
             return future.get();
@@ -38,24 +48,33 @@ public class NewsApiHelper {
             throw new RuntimeException(e);
         }
     }
+
     private String downloadUrl(String string) throws IOException {
         URL url = new URL(string);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
         // Set request headers
         connection.setRequestProperty("key", "Value");
+
         connection.connect();
+
         int responseCode = connection.getResponseCode();
         Log.d("NewsApiHelper", "HTTP Response Code: " + responseCode);
+
         try (InputStream stream = connection.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+
             StringBuilder builder = new StringBuilder();
             String line;
+
             while ((line = reader.readLine()) != null) {
                 builder.append(line);
             }
+
             return builder.toString();
         }
     }
+
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
@@ -65,58 +84,75 @@ public class NewsApiHelper {
         }
         return sb.toString();
     }
+
     private List<NewsItem> parseJson(String jsonString) {
         List<NewsItem> newsList = new ArrayList<>();
+
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
+
             //JSONArray articlesArray = jsonObject.getJSONArray("articles");
             JSONArray articlesArray = jsonObject.getJSONArray("results");
+
             for (int i = 0; i < articlesArray.length(); i++) {
                 JSONObject articleObject = articlesArray.getJSONObject(i);
+
                 String title = articleObject.getString("title");
+
                 // String url = articleObject.getString("url");
                 String url = articleObject.getString("link");
+
                 String imageUrl = articleObject.getString("image_url");
                 int maxCharacters = 150;
                 String description = articleObject.getString("description");
                 // Truncate the description to approximately 150 characters
                 if (description != null && description.length() > maxCharacters) {
                     description = description.substring(0, maxCharacters);
+
                     // Remove incomplete words at the end
                     int lastSpaceIndex = description.lastIndexOf(" ");
                     if (lastSpaceIndex != -1) {
                         description = description.substring(0, lastSpaceIndex) + "...";
                     }
+
                 }
                 NewsItem newsItem = new NewsItem(title, url, description, imageUrl);
                 newsList.add(newsItem);
+
             }
             Log.d("NewsApi", newsList.toString());
         } catch (JSONException e) {
             Log.e("NewsApiHelper", "Error parsing JSON", e);
         }
+
         return newsList;
     }
+
     public static class NewsItem {
         private String title;
         private String url;
         private String description;
         private String imageUrl;
+
         public NewsItem(String title, String url, String description, String imageUrl) {
             this.title = title;
             this.url = url;
             this.description = description;
             this.imageUrl = imageUrl;
         }
+
         public String getTitle() {
             return title;
         }
+
         public String getDescription() {
             return description;
         }
+
         public String getImageUrl() {
             return imageUrl;
         }
+
         public String getUrl() {
             return url;
         }

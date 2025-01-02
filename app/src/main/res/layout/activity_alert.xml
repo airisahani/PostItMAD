@@ -8,45 +8,21 @@
     android:background="@drawable/redgradient"
     tools:context=".Activities.AlertActivity">
 
-    <TextView
-        android:id="@+id/TVAlertData2"
-        android:layout_width="357dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="44dp"
-        android:text="Remember to ALWAYS bring umbrella with you!"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TVannouncement" />
 
     <TextView
-        android:id="@+id/TVCaution"
+        android:id="@+id/TVweather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:text="Caution"
+        android:layout_marginTop="20dp"
         android:paddingLeft="20dp"
+        android:text="Weather Alert"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/TVAlertData"
-        android:layout_width="357dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="40dp"
-        android:text="Always lock your door after leaving home!"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TVAlertData2" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -76,7 +52,7 @@
             android:layout_marginLeft="23dp"
             android:text="Post.it"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -86,7 +62,7 @@
             android:layout_gravity="start"
             android:text="  Alert Feed"
             android:textColor="@color/red"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -95,11 +71,11 @@
         android:id="@+id/TVannouncement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="296dp"
+        android:layout_marginTop="360dp"
         android:paddingLeft="20dp"
         android:text="Today's Public Safety Announcement"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -107,4 +83,118 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="400dp"
+        android:layout_height="270dp"
+        app:layout_constraintBottom_toTopOf="@+id/TVannouncement"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:orientation="vertical"
+            android:background="@drawable/greygradient">
+
+            <TextView
+                android:id="@+id/TVWeathertitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="Mostly Cloudy"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVweather" />
+
+            <ImageView
+                android:id="@+id/IVcloudysunny"
+                android:layout_width="110dp"
+                android:layout_height="108dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/cloudy_sunny" />
+
+            <TextView
+                android:id="@+id/TVdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tue Dec 31 | 12:04 AM"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/IVcloudysunny" />
+
+            <TextView
+                android:id="@+id/TVtemp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="25°"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="60sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/TVdate"
+                tools:layout_editor_absoluteX="0dp" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TVannouncement">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/greygradient"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="444dp">
+
+            <TextView
+                android:id="@+id/TVAlertData2"
+                android:layout_width="350dp"
+                android:layout_height="53dp"
+                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:text="Remember to ALWAYS bring umbrella with you!"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginStart="29dp"/>
+
+            <TextView
+                android:id="@+id/TVAlertData"
+                android:layout_width="350dp"
+                android:layout_height="53dp"
+                android:layout_marginTop="36dp"
+                android:text="Always lock your door after leaving home!"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginStart="30dp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
