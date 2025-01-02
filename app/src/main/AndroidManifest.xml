@@ -45,6 +45,9 @@
             android:exported="false"
             android:label="@string/title_activity_maps" />
         <activity
+            android:name=".Activities.AlertActivity"
+            android:exported="false"/>
+        <activity
             android:name=".Activities.AddReportActivity"
             android:exported="false" />
         <activity

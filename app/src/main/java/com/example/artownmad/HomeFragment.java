@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import java.util.List;
 
 //import com.kwabenaberko.newsapilib.NewsApiClient;
@@ -26,7 +27,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
 
     private ListView listView;
     private NewsAdapter newsAdapter;

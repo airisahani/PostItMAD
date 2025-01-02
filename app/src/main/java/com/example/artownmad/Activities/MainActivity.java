@@ -1,5 +1,7 @@
 package com.example.artownmad.Activities;
 
+import static androidx.core.app.ActivityCompat.requestPermissions;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -32,6 +34,8 @@ import com.example.artownmad.LogIn;
 import com.example.artownmad.MapFragment;
 import com.example.artownmad.R;
 import com.example.artownmad.UserProfile;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +53,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.Manifest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -168,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddReportActivity.class); // Create an Intent for the ReportActivity
+                Log.d("FAB", "FAB clicked");
+                Intent intent = new Intent(MainActivity.this, AddReportActivity.class); // Create an Intent for the ReportActivity
                 startActivity(intent); // Start the ReportActivity
             }
         });
@@ -184,13 +192,13 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(getApplicationContext(), chanelID);
         builder.setSmallIcon(R.drawable.ic_notifications_active_24)
-                .setContentTitle("Notification Title")
-                .setContentText("Some text for notification here")
+                .setContentTitle("Alert Notification!")
+                .setContentText("See what steps you need to take to protect yourself!")
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         Intent intent = new Intent(getApplicationContext(), AlertActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("data", "Some value to be passed here");
+        intent.putExtra("data", "Always lock your door after leaving home!");
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, intent, PendingIntent.FLAG_MUTABLE);
         builder.setContentIntent(pendingIntent);

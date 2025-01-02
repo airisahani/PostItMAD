@@ -1,10 +1,8 @@
 package com.example.artownmad.Activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -13,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.artownmad.HomeFragment;
 import com.example.artownmad.R;
-
-import java.util.Objects;
 
 public class AlertActivity extends AppCompatActivity {
     TextView textView;
@@ -30,6 +30,7 @@ public class AlertActivity extends AppCompatActivity {
         textView = findViewById(R.id.TVAlertData);
         String data = getIntent().getStringExtra("data");
         textView.setText(data);
+
 
         button = findViewById(R.id.BtnBack);
         button.setOnClickListener(new View.OnClickListener() {
@@ -49,4 +50,5 @@ public class AlertActivity extends AppCompatActivity {
             return insets;
         });
     }
+
 }
