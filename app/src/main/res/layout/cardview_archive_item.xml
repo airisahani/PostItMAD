@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="138dp">
 
+
             <TextView
                 android:id="@+id/TVReportTitle"
                 android:layout_width="267dp"
@@ -34,29 +35,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <TextView
-                android:id="@+id/TVReportLocation"
+                android:id="@+id/TVReportDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="92dp"
-                android:text="Location : "
+                android:layout_marginTop="16dp"
+                android:text="Description : "
                 android:textSize="15sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/TVReportTitle" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/TVReportStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="92dp"
+                android:layout_marginTop="12dp"
                 android:text="Status: "
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/TVReportLocation" />
+                app:layout_constraintTop_toBottomOf="@+id/TVReportDescription" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/TVReportEmoji"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"

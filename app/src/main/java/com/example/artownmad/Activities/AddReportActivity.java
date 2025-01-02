@@ -1,43 +1,27 @@
 package com.example.artownmad.Activities;
 
+
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-
 import com.example.artownmad.R;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,20 +29,16 @@ import androidx.core.app.ActivityCompat;
 
 public class AddReportActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
-    private Uri selectedImageUri;
     private EditText Title_et, et_description, name2;
     private Spinner spinner_category;
     private Switch switch_anonymity;
     private Button btn_post_report, btn_add_location, btn_add_current_location;
-    private ImageButton imageButton;
     private TextView tvSelectedLocation;
 
     private String locationString = "No location selected";
     private FirebaseFirestore db;
-    private StorageReference storageRef;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private ActivityResultLauncher<Intent> pickImageLauncher;
     private ActivityResultLauncher<Intent> mapLauncher;
 
     @SuppressLint("MissingInflatedId")
@@ -67,9 +47,8 @@ public class AddReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_report);
 
-        // Initialize Firebase Firestore and Storage
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize views
@@ -79,7 +58,6 @@ public class AddReportActivity extends AppCompatActivity {
         spinner_category = findViewById(R.id.spinner_category);
         switch_anonymity = findViewById(R.id.switch_anonymity);
         btn_post_report = findViewById(R.id.btn_post_report);
-        imageButton = findViewById(R.id.imageButton);
         btn_add_location = findViewById(R.id.btn_add_location);
         btn_add_current_location = findViewById(R.id.btn_add_current_location);
         tvSelectedLocation = findViewById(R.id.tv_location);
@@ -90,16 +68,7 @@ public class AddReportActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_category.setAdapter(adapter);
 
-        // Initialize ActivityResultLaunchers
-        pickImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        selectedImageUri = result.getData().getData();
-                    }
-                }
-        );
-
+        // Initialize ActivityResultLauncher for map
         mapLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -109,12 +78,6 @@ public class AddReportActivity extends AppCompatActivity {
                     }
                 }
         );
-
-        // Image picker
-        imageButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickImageLauncher.launch(intent);
-        });
 
         // Open map for location selection
         btn_add_location.setOnClickListener(v -> {
@@ -164,25 +127,7 @@ public class AddReportActivity extends AppCompatActivity {
             reportData.put("location", locationString);
             reportData.put("timestamp", System.currentTimeMillis());
 
-            if (selectedImageUri != null) {
-                StorageReference imageRef = storageRef.child("reports/" + System.currentTimeMillis() + ".jpg");
-                imageRef.putFile(selectedImageUri)
-                        .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    reportData.put("imageUrl", uri.toString());
-                                    saveReportToFirestore(reportData);
-                                })
-                                .addOnFailureListener(e -> {
-                                    FirebaseCrashlytics.getInstance().recordException(e);
-                                    Toast.makeText(this, "Failed to get image URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }))
-                        .addOnFailureListener(e -> {
-                            FirebaseCrashlytics.getInstance().recordException(e);
-                            Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-            } else {
-                saveReportToFirestore(reportData);
-            }
+            saveReportToFirestore(reportData);
         });
     }
 
@@ -194,7 +139,6 @@ public class AddReportActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    FirebaseCrashlytics.getInstance().recordException(e);
                     Toast.makeText(this, "Failed to post report: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
@@ -210,7 +154,4 @@ public class AddReportActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 }

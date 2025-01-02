@@ -4,20 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Search Bar -->
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- SearchView for location search -->
+    <SearchView
+        android:id="@+id/search_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search location"
-            android:focusable="false"
-            android:clickable="true" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:queryHint="Search location" />
 
     <!-- Google Maps Fragment -->
     <fragment
@@ -25,4 +17,6 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>
+

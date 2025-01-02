@@ -4,30 +4,37 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
 public class Reports {
-    private Timestamp timestamp;
+    //private Timestamp timestamp;
+    //private GeoPoint location;
+    private String userId;
+    private String status;
+    private String category;
+    private String name;
+    private String description;
+    private String title;
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+//    public Timestamp getTimestamp() {
+//        return timestamp;
+//    }
+//
+//    public void setTimestamp(Timestamp timestamp) {
+//        this.timestamp = timestamp;
+//    }
+//
+//    public GeoPoint getLocation() {
+//        return location;
+//    }
+//
+//    public void setLocation(GeoPoint location) {
+//        this.location = location;
+//    }
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public GeoPoint getLocation() {
-        return location;
-    }
-
-    public void setLocation(GeoPoint location) {
-        this.location = location;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUserId() {
@@ -46,8 +53,29 @@ public class Reports {
         this.status = status;
     }
 
-    private GeoPoint location;
-    private String desc;
-    private String userId;
-    private String status;
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
 }
