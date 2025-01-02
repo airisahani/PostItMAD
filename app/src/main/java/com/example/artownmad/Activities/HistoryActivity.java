@@ -94,7 +94,8 @@ public class HistoryActivity extends AppCompatActivity {
                             Log.d("TAG", "success");
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 Reports report = document.toObject(Reports.class);
-                                reports.add(report);
+                                if ("resolved".equalsIgnoreCase(report.getStatus())) {
+                                    reports.add(report);}
 
 //                                // Check if the report is within 10 km from the device's location
 //                                if (isWithinDistance(report)) {

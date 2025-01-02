@@ -140,14 +140,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null){
+                    Log.e("FirestoreListener", "Error: " + error.getMessage());
                     return;
                 }
                 if (value != null && !value.isEmpty()){
+                    Log.d("FirestoreListener", "Documents received: " + value.size());
                     for(QueryDocumentSnapshot document : value){
                         // Check if the "status" field has changed
                         String currentStatus = document.getString("status");
                         String previousStatus = getPreviousStatus(getApplicationContext(),document.getId());
                         if (previousStatus == null || !previousStatus.equals(currentStatus)){
+                            Log.d("NotificationLogic", "Status changed: " + previousStatus + " -> " + currentStatus);
                             // Status has changed, show notification
                             showNotification(currentStatus);
                             // Update the previous status
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     public void makeNotification(){
         String chanelID = "CHANNEL_ID_NOTIFICATION";
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(getApplicationContext(), chanelID);
+                new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
         builder.setSmallIcon(R.drawable.ic_notifications_active_24)
                 .setContentTitle("Alert Notification!")
                 .setContentText("See what steps you need to take to protect yourself!")
@@ -208,9 +211,8 @@ public class MainActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         Intent intent = new Intent(getApplicationContext(), AlertActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        intent.putExtra("data", "Always lock your door after leaving home!");
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+//        intent.putExtra("data", "Always lock your door after leaving home!");
+//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
 
         intent.putExtra("data", "Some value to be passed here");
         PendingIntent pendingIntent = getActivity(getApplicationContext(),
@@ -232,12 +234,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            CharSequence name = "Crime";
-            String description = "Report status update";
+            CharSequence name = "Post.It Notifications";
+            String description = "Notifications for report status updates.";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
             // Create a notification channel with the given ID, name and importance
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
                 channel.setDescription(description);
 
@@ -263,9 +265,10 @@ public class MainActivity extends AppCompatActivity {
     }
         // show notification for report status
         private void showNotification (String current){
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             Intent intent = new Intent(this, HistoryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.logo)
@@ -274,6 +277,10 @@ public class MainActivity extends AppCompatActivity {
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
+
+//            if (notificationManager != null) {
+//                notificationManager.notify(0, builder.build());
+//            }
 
             NotificationManagerCompat manager = NotificationManagerCompat.from(this);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
