@@ -3,7 +3,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
