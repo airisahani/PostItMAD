@@ -20,6 +20,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
+import android.os.Handler;
+import android.os.Looper;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -82,34 +86,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void searchLocation(String location) {
-        if (location == null || location.isEmpty()) {
-            Toast.makeText(this, "Please enter a location", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (location == null || location.isEmpty()) return;
 
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> addressList;
+        // Create a background thread executor
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        try {
-            // Get list of addresses matching the search query
-            addressList = geocoder.getFromLocationName(location, 1);
-            if (addressList == null || addressList.isEmpty()) {
-                Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show();
-                return;
+        executor.execute(() -> {
+            Geocoder geocoder = new Geocoder(this);
+            List<Address> addressList;
+
+            try {
+                // Perform Geocoding in the background thread
+                addressList = geocoder.getFromLocationName(location, 1);
+                if (addressList == null || addressList.isEmpty()) {
+                    // Post result back to the main thread
+                    handler.post(() -> Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show());
+                    return;
+                }
+
+                // Extract the first address and get its LatLng
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                // Post result back to the main thread
+                handler.post(() -> {
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                handler.post(() -> Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show());
             }
-
-            // Extract the first address and get its LatLng
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-            // Add a marker at the searched location and move the camera
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
-        }
+        });
     }
 
     @Override
