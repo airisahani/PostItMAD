@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ArTownMAD"
         tools:targetApi="31">
-
-        <activity android:name=".Activities.StatusUpdate"
+        <activity
+            android:name=".Activities.DeleteAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.StatusUpdate"
             android:exported="false" />
         <activity
             android:name=".Activities.ForgotPasswordActivity"

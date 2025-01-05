@@ -1,5 +1,6 @@
 package com.example.artownmad;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,8 +14,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
+import com.example.artownmad.Activities.ChangePasswordActivity;
+import com.example.artownmad.Activities.DeleteAccountActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -93,7 +95,8 @@ public class UserProfile extends Fragment {
         BtnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.changePassword);
+                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -101,18 +104,19 @@ public class UserProfile extends Fragment {
         BtnDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.deleteAccount);
+                Intent intent = new Intent(getActivity(), DeleteAccountActivity.class);
+                startActivity(intent);
             }
         });
 
         //Set OnClickListener on ImageView
-        ProfilePic = view.findViewById(R.id.ProfilePic);
-        ProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.uploadImage);
-            }
-        });
+//        ProfilePic = view.findViewById(R.id.ProfilePic);
+//        ProfilePic.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Navigation.findNavController(view).navigate(R.id.uploadImage);
+//            }
+//        });
 
         authProfile = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = authProfile.getCurrentUser();
